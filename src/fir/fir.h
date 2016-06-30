@@ -13,10 +13,10 @@ SC_MODULE(fir) {
     sc_in< sc_int<16> > input;
     sc_out< sc_int<16> > output;
 
-    void fir_main();
+    void fir_core();
 
     SC_CTOR(fir) {
-        SC_CTHREAD(fir_main, clk.pos());
+        SC_CTHREAD(fir_core, clk.pos());
         reset_signal_is(reset, true);
     }
 };

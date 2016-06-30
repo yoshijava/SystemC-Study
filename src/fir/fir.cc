@@ -1,7 +1,9 @@
 #include <systemc>
-#include "fir.hpp"
+#include "fir.h"
 
-void fir::fir_main(void) {
+using namespace std;
+
+void fir::fir_core(void) {
     const sc_uint<8> coef[5] = {3,0,6,7,8};
     sc_int<16> taps[5];
     // reset
@@ -18,6 +20,7 @@ void fir::fir_main(void) {
         for(int i=0; i<5; i++) {
             val += coef[i] * taps[i];
         }
+        cout << "fir output = " << val << endl;
         output.write(val);
         sc_core::wait();
     }
