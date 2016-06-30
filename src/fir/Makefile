@@ -7,7 +7,7 @@ all: fir
 
 fir:
 	mkdir -p out
-	g++ -o out/$(fir) *.cpp -g $(LIB_DIR) $(INC_DIR) -static $(LIB) -lm -lpthread
+	g++ -std=c++11 -o out/$(fir) *.cpp -g $(LIB_DIR) $(INC_DIR) -static $(LIB) -lm -lpthread
 
 clean:
 	rm out/*
