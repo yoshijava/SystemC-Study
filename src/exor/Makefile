@@ -4,7 +4,7 @@ LIB=-lsystemc
 
 all:
 	mkdir -p out
-	g++ -o out/exor main.cpp -g $(LIB_DIR) $(INC_DIR) $(LIB) -lm
+	g++ -o out/exor main.cpp -g $(LIB_DIR) $(INC_DIR) -static $(LIB) -lm -lpthread
 clean:
 	rm -f out/*
 
