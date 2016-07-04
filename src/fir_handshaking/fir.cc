@@ -17,7 +17,6 @@ void fir::fir_core(void) {
 
         do {
             wait();
-            cout << "in_valid.read() = " << in_valid.read() << endl;
         } while(!in_valid.read());
         in_val = in.read();
         in_ready.write(1);
