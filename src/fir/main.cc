@@ -8,7 +8,7 @@ using namespace sc_dt;
 
 SC_MODULE(SYSTEM) {
     tb *tb0;
-    ::fir *fir0;
+    fir *fir0;
 
     sc_signal< sc_int<16> > input_signal;
     sc_signal< sc_int<16> > output_signal;
