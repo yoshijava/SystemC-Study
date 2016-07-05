@@ -6,7 +6,7 @@ SC_MODULE(stim)
 
   void StimGen()
   {
-    A.write(false);
+    A.write(true);
     B.write(false);
     wait();
     A.write(false);
@@ -22,6 +22,7 @@ SC_MODULE(stim)
   }
   SC_CTOR(stim)
   {
+    //cout << "Stim Constructor at: " << sc_time_stamp() << endl;
     SC_THREAD(StimGen);
     sensitive << Clk.pos();
   }

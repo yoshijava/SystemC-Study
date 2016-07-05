@@ -11,6 +11,7 @@ SC_MODULE(nand2)          // declare nand2 sc_module
 
   SC_CTOR(nand2)          // constructor for nand2
   {
+    //cout << "NAND2 Constructor at: " << sc_time_stamp() << endl;
     SC_METHOD(do_nand2);  // register do_nand2 with kernel
     sensitive << A << B;  // sensitivity list
   }

@@ -5,7 +5,7 @@ using namespace std;
 
 SC_MODULE(mon) {
     sc_in<bool> A,B,F;
-    sc_in<bool> Clk;
+    sc_in<bool> clk;
 
     void monitor() {
         cout << setw(10) << "Time";
@@ -21,7 +21,8 @@ SC_MODULE(mon) {
         }
     }
     SC_CTOR(mon) {
+        //cout << "Monitor Constructor at: " << sc_time_stamp() << endl;
         SC_THREAD(monitor);
-        sensitive << Clk.pos();
+        sensitive << clk.pos();
     }
 };
