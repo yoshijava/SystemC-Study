@@ -7,16 +7,16 @@ SC_MODULE(stim)
   void StimGen()
   {
     A.write(true);
+    B.write(true);
+    wait();
+    A.write(true);
     B.write(false);
     wait();
     A.write(false);
     B.write(true);
     wait();
-    A.write(true);
+    A.write(false);
     B.write(false);
-    wait();
-    A.write(true);
-    B.write(true);
     wait();
     sc_stop();
   }
