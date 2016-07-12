@@ -10,6 +10,7 @@ using namespace sc_core;
 using namespace sc_dt;
 using namespace std;
 using namespace tlm_utils;
+using namespace tlm;
 
 SC_MODULE(Memory) {
     // TLM-2 socket, defaults to 32-bits wide, base protocol
@@ -28,7 +29,7 @@ SC_MODULE(Memory) {
             mem[i] = 0xAA000000 | (rand() % 256);
         }
     }
-    void b_transport(tlm::tlm_generic_payload& trans, sc_time& delay);
+    void b_transport(tlm_generic_payload& trans, sc_time& delay);
 };
 
 #endif
