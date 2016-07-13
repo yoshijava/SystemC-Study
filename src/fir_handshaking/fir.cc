@@ -15,9 +15,9 @@ void fir::fir_core(void) {
         sc_int<16> in_val;
         sc_int<16> out_val;
 
-        do {
+        while(!in_valid.read()) {
             wait();
-        } while(!in_valid.read());
+        }
         in_val = in.read();
         in_ready.write(1);
 

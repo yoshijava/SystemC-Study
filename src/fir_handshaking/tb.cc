@@ -37,6 +37,9 @@ void tb::sink() {
 
     // Read output coming from DUT
     for(int i=0; i<64; i++) {
+        while(!out_valid.read()) {
+            wait();
+        }
         indata = out.read();
         cout << i << " :\t" << indata.to_int() << endl;
         out_ready.write(1);
