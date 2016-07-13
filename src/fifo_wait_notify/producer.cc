@@ -7,6 +7,6 @@ void producer::do_writes() {
         wait(); // for clock edge
         out->write(testString[i]);
         cout << "W " << testString[i] << " at " << sc_time_stamp() << endl;
-        i = (i+1) % 32;
+        i = (i+1) % strlen(testString);
     }
 }

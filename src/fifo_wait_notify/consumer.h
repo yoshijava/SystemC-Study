@@ -8,13 +8,13 @@
 class consumer : public sc_module {
 public:
     sc_port<fifo_interface> in;
-    sc_in<bool> Clock;
+    sc_in<bool> clock;
 
     void do_reads();
 
     SC_CTOR(consumer) {
         SC_THREAD(do_reads);
-        sensitive << Clock.pos();
+        sensitive << clock.pos();
     }
 };
 

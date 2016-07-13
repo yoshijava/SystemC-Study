@@ -12,10 +12,12 @@ public:
         readIndex = 0;
         mDebug = false;
     }
+    // Inherited from fifo_interface
     char read();
     void write(char charToWrite);
     bool full();
     int elementNum();
+    // Inherited from sc_prim_channel
     void update();
 
 private:
