@@ -1,0 +1,9 @@
+Usage:
+    The program can have at most 1 parameter, indicating whether to insert error intentionally to observe error response from Memory.
+    Parameter:
+        0: no error will be inserted
+        1: an error will be inserted after some transactions
+        (no parameters): no error will be inserted, as parameter 0
+E.g.
+./out/dmi
+./out/dmi 1
