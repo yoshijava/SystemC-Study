@@ -41,7 +41,7 @@ int fifo::elementNum() {
 void fifo::update() {
     if (mDebug)
         cout << "update()" << endl;
-    if (mElementNum > 0){
+    if (mElementNum > 0) {
         data_written_event.notify(SC_ZERO_TIME);
     }
     if (!full()) {
