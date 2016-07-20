@@ -1,20 +1,20 @@
 #ifndef Memory_H
 #define Memory_H
 
-#include "systemc"
+#include "systemc.h"
 #include "tlm.h"
 #include "tlm_utils/simple_initiator_socket.h"
 #include "tlm_utils/simple_target_socket.h"
 
-using namespace sc_core;
-using namespace sc_dt;
-using namespace std;
-using namespace tlm_utils;
-using namespace tlm;
+// using namespace sc_core;
+// using namespace sc_dt;
+// using namespace std;
+// using namespace tlm_utils;
+// using namespace tlm;
 
 SC_MODULE(Memory) {
     // TLM-2 socket, defaults to 32-bits wide, base protocol
-    simple_target_socket<Memory> socket;
+    tlm_utils::simple_target_socket<Memory> socket;
     enum {
         SIZE = 256
     };
@@ -29,7 +29,7 @@ SC_MODULE(Memory) {
             mem[i] = 0xAA000000 | (rand() % 256);
         }
     }
-    void b_transport(tlm_generic_payload& trans, sc_time& delay);
+    void b_transport(tlm::tlm_generic_payload& trans, sc_time& delay);
 };
 
 #endif
