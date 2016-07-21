@@ -17,14 +17,14 @@ void Memory::memoryProcess() {
 }
 
 void Memory::b_transport(tlm_generic_payload& transactions, sc_time& delay) {
-    tlm_command     cmd =            transactions.get_command();     
+    tlm_command     cmd =            transactions.get_command();
     sc_dt::uint64   address =        transactions.get_address() / 4;
     unsigned char*  dataPtr =        transactions.get_data_ptr();
     unsigned int    dataLength =     transactions.get_data_length();
     unsigned int    streamingWidth = transactions.get_streaming_width();
     // unsigned char* byteEnablePtr = transactions.get_byte_enable_ptr();
     // unsigned int byteEnableLength = transactions.get_byte_enable_length();
-    
+
     if (address < 0 || address >  MEM_SIZE) {
         transactions.set_response_status(TLM_ADDRESS_ERROR_RESPONSE);
         return;

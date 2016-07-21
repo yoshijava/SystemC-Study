@@ -5,24 +5,23 @@ using namespace sc_dt;
 using namespace std;
 using namespace tlm;
 
-#define MEM_ACCESS_MAX 256
-
 void Initiator::initiatorProcess() {
     tlm_generic_payload* transactions = new tlm_generic_payload();
     sc_time transportDelay = sc_time(10, SC_NS);
 
-    for (int i=0 ; i<MEM_ACCESS_MAX ; i+=4) {
+    for (int i=256-64 ; i<256+64 ; i+=4) {
         tlm_command cmd = static_cast<tlm_command> (rand() % 2);
         int data = 0xFF000000 | i;
 
         if (isDmiValid) {
             unsigned char* dmiPtr = dmiData.get_dmi_ptr();
             if (cmd == TLM_READ_COMMAND) {
-                memcpy(&data, dmiPtr + i, 4);
+                memcpy(&data, dmiPtr + i - dmiData.get_start_address(), 4);
                 wait(dmiData.get_read_latency());
 
-            } else if (cmd == TLM_WRITE_COMMAND) {
-                memcpy(dmiPtr + i, &data, 4);
+            }
+            else if (cmd == TLM_WRITE_COMMAND) {
+                memcpy(dmiPtr + i - dmiData.get_start_address(), &data, 4);
                 wait(dmiData.get_write_latency());
 
             }
@@ -40,9 +39,6 @@ void Initiator::initiatorProcess() {
             transactions->set_dmi_allowed(false);
             transactions->set_response_status(tlm::TLM_INCOMPLETE_RESPONSE); // Mandatory initial value
 
-            if (errorAfter15Ns && i>=8) {
-                transactions->set_address(9999999);
-            }
             // Transport to Memory
             // Memory may allow direct memory access here
             socket->b_transport(*transactions, transportDelay);

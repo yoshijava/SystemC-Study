@@ -1,3 +1,6 @@
+#ifndef ROUTER_H
+#define ROUTER_H
+
 #include "systemc.h"
 #include "tlm.h"
 #include "tlm_utils/simple_initiator_socket.h"
@@ -44,6 +47,7 @@ struct Router : sc_module {
         unsigned int target_nr = decode_address(address, masked_address);
         trans.set_address(masked_address);
         (*initiator_socket[target_nr])->b_transport(trans, delay );
+        std::cout << "Target to send = " << target_nr << std::endl;
     }
 
     bool get_direct_mem_ptr(tlm::tlm_generic_payload& trans, tlm::tlm_dmi& dmiData) {
@@ -65,3 +69,5 @@ struct Router : sc_module {
 
 
 };
+
+#endif
