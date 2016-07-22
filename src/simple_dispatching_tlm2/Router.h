@@ -6,27 +6,18 @@
 #include "tlm_utils/simple_initiator_socket.h"
 #include "tlm_utils/simple_target_socket.h"
 
-template<unsigned int N_TARGETS>
 struct Router : sc_module {
+    int N_TARGETS;
     tlm_utils::simple_target_socket<Router> target_socket;
-    tlm_utils::simple_initiator_socket_tagged<Router>* initiator_socket[N_TARGETS];
+    tlm_utils::simple_initiator_socket_tagged<Router>** initiator_socket;
 
-
-    inline uint64 compose_address(unsigned int target_nr, uint64 address) {
-        return (target_nr << 8) | (address & 0xFF);
-    }
-
-    inline unsigned int decode_address(uint64 address, uint64& masked_address ) {
-        unsigned int target_nr = static_cast<unsigned int>((address >> 8) & 0x3);
-        masked_address = address & 0xFF;
-        return target_nr;
-    }
-
-    SC_CTOR(Router) : target_socket("target_socket") {
+    Router(int N_TARGETS): sc_module("Router"), target_socket("target_socket") {
         target_socket.register_b_transport(this, &Router::b_transport);
         target_socket.register_get_direct_mem_ptr(this, &Router::get_direct_mem_ptr);
         target_socket.register_transport_dbg(this, &Router::transport_dbg);
 
+        using namespace tlm_utils;
+        initiator_socket = (simple_initiator_socket_tagged<Router>**) malloc(sizeof(simple_initiator_socket_tagged<Router>*)*N_TARGETS);
         for (int i = 0; i < N_TARGETS; i++) {
             char txt[20];
             sprintf(txt, "socket_%d", i);
@@ -67,6 +58,15 @@ struct Router : sc_module {
         return (*initiator_socket[target_nr])->transport_dbg(trans);
     }
 
+    inline uint64 compose_address(unsigned int target_nr, uint64 address) {
+        return (target_nr << 8) | (address & 0xFF);
+    }
+
+    inline unsigned int decode_address(uint64 address, uint64& masked_address ) {
+        unsigned int target_nr = static_cast<unsigned int>((address >> 8) & 0x3);
+        masked_address = address & 0xFF;
+        return target_nr;
+    }
 
 };
 
