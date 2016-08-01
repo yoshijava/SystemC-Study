@@ -13,7 +13,7 @@ SC_MODULE(Initiator) {
 
     SC_HAS_PROCESS(Initiator);
     //SC_CTOR(Initiator) : socket("socket"), isDmiValid(false) {
-    Initiator(sc_module_name name_, bool errorAfter15Ns_=false) : socket("socket"), isDmiValid(false), errorAfter15Ns(errorAfter15Ns_) {
+    Initiator(sc_module_name name_, bool errorAfter15Ns_=false) : sc_module(name_), socket("socket"), isDmiValid(false), errorAfter15Ns(errorAfter15Ns_) {
 
         socket.register_invalidate_direct_mem_ptr(this, &Initiator::invalidate_direct_mem_ptr);
         SC_THREAD(initiatorProcess);
