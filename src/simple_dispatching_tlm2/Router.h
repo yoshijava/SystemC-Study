@@ -44,6 +44,7 @@ struct Router : sc_module {
     bool get_direct_mem_ptr(tlm::tlm_generic_payload& trans, tlm::tlm_dmi& dmiData) {
         uint64 masked_address;
         unsigned int target_nr = decode_address(trans.get_address(), masked_address );
+        printf("Target to send = %u ; address = %u\n", target_nr, static_cast<unsigned int>(trans.get_address()));
         trans.set_address(masked_address);
         bool status = (*initiator_socket[target_nr])->get_direct_mem_ptr(trans, dmiData);
         dmiData.set_start_address(compose_address(target_nr, dmiData.get_start_address()));

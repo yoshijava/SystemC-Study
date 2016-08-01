@@ -54,6 +54,7 @@ void Initiator::initiatorProcess() {
 
             // Get the answer from Memory
             if (transactions->is_dmi_allowed()) {
+                transactions->set_address(i);
                 dmiData.init();
             	isDmiValid = socket->get_direct_mem_ptr(*transactions, dmiData);
             }

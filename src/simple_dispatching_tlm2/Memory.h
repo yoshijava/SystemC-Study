@@ -1,7 +1,7 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#define MEM_SIZE 512
+#define MEM_SIZE 256
 
 #include "systemc.h"
 #include "tlm.h"
