@@ -11,11 +11,15 @@ class MM: public tlm::tlm_mm_interface {
     typedef tlm::tlm_generic_payload gp_t;
 
 public:
-    MM() : free_list(0), empties(0)
-    #ifdef DEBUG
-    , count(0)
-    #endif
-    {}
+    MM() :
+        free_list(0),
+        empties(0)
+        #ifdef DEBUG
+        , count(0)
+        #endif
+    {
+        // empty constructor
+    }
 
     gp_t* allocate();
     void  free(gp_t* trans);
@@ -59,8 +63,9 @@ public:
             empties = new access();
             empties->next = free_list;
             empties->prev = 0;
-            if (free_list)
-            free_list->prev = empties;
+            if (free_list) {
+                free_list->prev = empties;
+            }
         }
         free_list = empties;
         free_list->trans = trans;
