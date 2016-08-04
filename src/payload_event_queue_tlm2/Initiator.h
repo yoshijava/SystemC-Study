@@ -30,7 +30,11 @@ struct Initiator: sc_module {
     sc_event end_request_event;
     tlm_utils::peq_with_cb_and_phase<Initiator> m_peq;
 
-    SC_CTOR(Initiator) : socket("socket"), request_in_progress(0) , m_peq(this, &Initiator::peq_cb) {
+    SC_CTOR(Initiator) :
+        socket("socket"),
+        request_in_progress(0),
+        m_peq(this, &Initiator::peq_cb)
+    {
         // Register callbacks for incoming interface method calls
         socket.register_nb_transport_bw(this, &Initiator::nb_transport_bw);
         SC_THREAD(thread_process);
@@ -45,7 +49,9 @@ struct Initiator: sc_module {
         for (int i = 0; i < 1000; i++) {
             int adr = rand();
             tlm::tlm_command cmd = static_cast<tlm::tlm_command>(rand() % 2);
-            if (cmd == tlm::TLM_WRITE_COMMAND) data[i % 16] = rand();
+            if (cmd == tlm::TLM_WRITE_COMMAND) {
+                data[i % 16] = rand();
+            }
 
             // Grab a new transaction from the memory manager
             trans = m_mm.allocate();
@@ -118,10 +124,10 @@ struct Initiator: sc_module {
     // TLM-2 backward non-blocking transport method
 
     virtual tlm::tlm_sync_enum nb_transport_bw( tlm::tlm_generic_payload& trans, tlm::tlm_phase& phase, sc_time& delay ) {
-            // The timing annotation must be honored
-            m_peq.notify( trans, phase, delay );
-            return tlm::TLM_ACCEPTED;
-        }
+        // The timing annotation must be honored
+        m_peq.notify( trans, phase, delay );
+        return tlm::TLM_ACCEPTED;
+    }
 
     // Payload event queue callback to handle transactions from target
     // Transaction could have arrived through return path or backward path
@@ -169,8 +175,7 @@ struct Initiator: sc_module {
         sc_dt::uint64    adr = trans.get_address();
         int*             ptr = reinterpret_cast<int*>( trans.get_data_ptr() );
 
-        fout<< hex << adr << " check, cmd=" << (cmd ? 'W' : 'R')
-        << ", data=" << hex << *ptr << " at time " << sc_time_stamp() << endl;
+        fout<< hex << adr << " check, cmd=" << (cmd ? 'W' : 'R') << ", data=" << hex << *ptr << " at time " << sc_time_stamp() << endl;
 
         // Allow the memory manager to free the transaction object
         trans.release();

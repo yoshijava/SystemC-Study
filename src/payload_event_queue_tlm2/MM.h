@@ -56,7 +56,7 @@ public:
         fout << "----------------------------- Called free(), #trans = " << --count << endl;
         #endif
         if (!empties) {
-            empties = new access;
+            empties = new access();
             empties->next = free_list;
             empties->prev = 0;
             if (free_list)

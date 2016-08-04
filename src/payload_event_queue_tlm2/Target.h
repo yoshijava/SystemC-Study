@@ -6,18 +6,22 @@
 #define Target_H
 DECLARE_EXTENDED_PHASE(internal_ph);
 
-struct Target: sc_module
-{
+struct Target: sc_module {
     // TLM-2 socket, defaults to 32-bits wide, base protocol
     tlm_utils::simple_target_socket<Target> socket;
+    int   n_trans;
+    bool  response_in_progress;
+    tlm::tlm_generic_payload*  next_response_pending;
+    tlm::tlm_generic_payload*  end_req_pending;
+    tlm_utils::peq_with_cb_and_phase<Target> m_peq;
 
-    SC_CTOR(Target)
-    : socket("socket")
-    , n_trans(0)
-    , response_in_progress(false)
-    , next_response_pending(0)
-    , end_req_pending(0)
-    , m_peq(this, &Target::peq_cb)
+    SC_CTOR(Target) :
+        socket("socket"),
+        n_trans(0),
+        response_in_progress(false),
+        next_response_pending(0),
+        end_req_pending(0),
+        m_peq(this, &Target::peq_cb)
     {
         // Register callbacks for incoming interface method calls
         socket.register_nb_transport_fw(this, &Target::nb_transport_fw);
@@ -25,7 +29,7 @@ struct Target: sc_module
 
     // TLM-2 non-blocking transport method
 
-    virtual tlm::tlm_sync_enum nb_transport_fw( tlm::tlm_generic_payload& trans, tlm::tlm_phase& phase, sc_time& delay ) {
+    virtual tlm::tlm_sync_enum nb_transport_fw(tlm::tlm_generic_payload& trans, tlm::tlm_phase& phase, sc_time& delay) {
         sc_dt::uint64    adr = trans.get_address();
         unsigned int     len = trans.get_data_length();
         unsigned char*   byt = trans.get_byte_enable_ptr();
@@ -53,93 +57,93 @@ struct Target: sc_module
 
         switch (phase) {
             case tlm::BEGIN_REQ:
-
-            #ifdef DEBUG
+                #ifdef DEBUG
                 fout << hex << trans.get_address() << " BEGIN_REQ at " << sc_time_stamp() << endl;
-            #endif
+                #endif
 
-            // Increment the transaction reference count
-            trans.acquire();
+                // Increment the transaction reference count
+                trans.acquire();
 
-            // Put back-pressure on initiator by deferring END_REQ until pipeline is clear
-            if (n_trans == 2)
-            end_req_pending = &trans;
-            else
-            {
-                status = send_end_req(trans);
-                if (status == tlm::TLM_COMPLETED) // It is questionable whether this is valid
+                // Put back-pressure on initiator by deferring END_REQ until pipeline is clear
+                if (n_trans == 2) {
+                    end_req_pending = &trans;
+                }
+                else {
+                    status = send_end_req(trans);
+                    if (status == tlm::TLM_COMPLETED) {// It is questionable whether this is valid
+                        break;
+                    }
+                }
                 break;
-            }
-
-            break;
 
             case tlm::END_RESP:
-            // On receiving END_RESP, the target can release the transaction
-            // and allow other pending transactions to proceed
+                // On receiving END_RESP, the target can release the transaction
+                // and allow other pending transactions to proceed
 
-            #ifdef DEBUG
+                #ifdef DEBUG
                 fout << hex << trans.get_address() << " END_RESP at " << sc_time_stamp() << endl;
-            #endif
+                #endif
 
-            if (!response_in_progress) {
-                SC_REPORT_FATAL("TLM-2", "Illegal transaction phase END_RESP received by target");
-            }
+                if (!response_in_progress) {
+                    SC_REPORT_FATAL("TLM-2", "Illegal transaction phase END_RESP received by target");
+                }
 
-            trans.release();
-            n_trans--;
+                trans.release();
+                n_trans--;
 
-            // Target itself is now clear to issue the next BEGIN_RESP
-            response_in_progress = false;
-            if (next_response_pending) {
-                send_response( *next_response_pending );
-                next_response_pending = 0;
-            }
+                // Target itself is now clear to issue the next BEGIN_RESP
+                response_in_progress = false;
+                if (next_response_pending) {
+                    send_response( *next_response_pending );
+                    next_response_pending = 0;
+                }
 
-            // ... and to unblock the initiator by issuing END_REQ
-            if (end_req_pending) {
-                status = send_end_req( *end_req_pending );
-                end_req_pending = 0;
-            }
+                // ... and to unblock the initiator by issuing END_REQ
+                if (end_req_pending) {
+                    status = send_end_req( *end_req_pending );
+                    end_req_pending = 0;
+                }
 
-            break;
+                break;
 
             case tlm::END_REQ:
             case tlm::BEGIN_RESP:
                 SC_REPORT_FATAL("TLM-2", "Illegal transaction phase received by target");
-            break;
+                break;
 
             default:
-            if (phase == internal_ph) {
-                // Execute the read or write commands
+                if (phase == internal_ph) {
+                    // Execute the read or write commands
 
-                tlm::tlm_command cmd = trans.get_command();
-                sc_dt::uint64    adr = trans.get_address();
-                unsigned char*   ptr = trans.get_data_ptr();
-                unsigned int     len = trans.get_data_length();
+                    tlm::tlm_command cmd = trans.get_command();
+                    sc_dt::uint64    adr = trans.get_address();
+                    unsigned char*   ptr = trans.get_data_ptr();
+                    unsigned int     len = trans.get_data_length();
 
-                if ( cmd == tlm::TLM_READ_COMMAND ) {
-                    *reinterpret_cast<int*>(ptr) = rand();
-                    fout << hex << adr << " Execute READ, data = " << *reinterpret_cast<int*>(ptr) << endl;
-                }
-                else if ( cmd == tlm::TLM_WRITE_COMMAND )
-                fout << hex << adr << " Execute WRITE, data = " << *reinterpret_cast<int*>(ptr) << endl;
-
-                trans.set_response_status( tlm::TLM_OK_RESPONSE );
-
-                // Target must honor BEGIN_RESP/END_RESP exclusion rule
-                // i.e. must not send BEGIN_RESP until receiving previous END_RESP or BEGIN_REQ
-                if (response_in_progress) {
-                    // Target allows only two transactions in-flight
-                    if (next_response_pending) {
-                        SC_REPORT_FATAL("TLM-2", "Attempt to have two pending responses in target");
+                    if ( cmd == tlm::TLM_READ_COMMAND ) {
+                        *reinterpret_cast<int*>(ptr) = rand();
+                        fout << hex << adr << " Execute READ, data = " << *reinterpret_cast<int*>(ptr) << endl;
                     }
-                    next_response_pending = &trans;
+                    else if ( cmd == tlm::TLM_WRITE_COMMAND ) {
+                        fout << hex << adr << " Execute WRITE, data = " << *reinterpret_cast<int*>(ptr) << endl;
+                    }
+
+                    trans.set_response_status( tlm::TLM_OK_RESPONSE );
+
+                    // Target must honor BEGIN_RESP/END_RESP exclusion rule
+                    // i.e. must not send BEGIN_RESP until receiving previous END_RESP or BEGIN_REQ
+                    if (response_in_progress) {
+                        // Target allows only two transactions in-flight
+                        if (next_response_pending) {
+                            SC_REPORT_FATAL("TLM-2", "Attempt to have two pending responses in target");
+                        }
+                        next_response_pending = &trans;
+                    }
+                    else {
+                        send_response(trans);
+                    }
+                    break;
                 }
-                else {
-                    send_response(trans);
-                }
-                break;
-            }
         }
     }
 
@@ -189,11 +193,5 @@ struct Target: sc_module
             response_in_progress = false;
         }
     }
-
-    int   n_trans;
-    bool  response_in_progress;
-    tlm::tlm_generic_payload*  next_response_pending;
-    tlm::tlm_generic_payload*  end_req_pending;
-    tlm_utils::peq_with_cb_and_phase<Target> m_peq;
 };
 #endif
