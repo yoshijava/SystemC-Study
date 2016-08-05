@@ -20,7 +20,7 @@ using namespace tlm_utils;
 // Initiator module generating multiple pipelined generic payload transactions
 // **************************************************************************************
 
-static ofstream fout("foo.txt");
+static ofstream fout("out.txt");
 
 struct Initiator: sc_module {
     // TLM-2 socket, defaults to 32-bits wide, base protocol
@@ -79,7 +79,7 @@ struct Initiator: sc_module {
             // Timing annotation models processing time of initiator prior to call
             delay = sc_time(rand_ps(), SC_PS);
 
-            fout << hex << adr << " new, cmd=" << (cmd ? 'W' : 'R') << ", data=" << hex << data[i % 16] << " at time " << sc_time_stamp() << endl;
+            fout << "Initiator: " << hex << adr << " new, cmd=" << (cmd ? 'W' : 'R') << ", data=" << hex << data[i % 16] << " at time " << sc_time_stamp() << endl;
 
             // Non-blocking transport call on the forward path
             tlm_sync_enum status;
@@ -116,7 +116,7 @@ struct Initiator: sc_module {
 
         delay = sc_time(rand_ps(), SC_PS);
 
-        fout << "Calling b_transport at " << sc_time_stamp() << " with delay = " << delay << endl;
+        fout << "Initiator: " << "Calling b_transport at " << sc_time_stamp() << " with delay = " << delay << endl;
 
         // Call b_transport to demonstrate the b/nb conversion by the simple_target_socket
         socket->b_transport( *trans, delay );
@@ -137,10 +137,10 @@ struct Initiator: sc_module {
     void peq_cb(tlm_generic_payload& trans, const tlm_phase& phase) {
         #ifdef DEBUG
             if (phase == END_REQ) {
-                fout << hex << trans.get_address() << " END_REQ at " << sc_time_stamp() << endl;
+                fout << "Initiator: " << hex << trans.get_address() << " END_REQ at " << sc_time_stamp() << endl;
             }
             else if (phase == BEGIN_RESP) {
-                fout << hex << trans.get_address() << " BEGIN_RESP at " << sc_time_stamp() << endl;
+                fout << "Initiator: " << hex << trans.get_address() << " BEGIN_RESP at " << sc_time_stamp() << endl;
             }
         #endif
 
@@ -174,10 +174,10 @@ struct Initiator: sc_module {
         }
 
         tlm_command cmd = trans.get_command();
-        sc_dt::uint64    adr = trans.get_address();
-        int*             ptr = reinterpret_cast<int*>( trans.get_data_ptr() );
+        uint64      adr = trans.get_address();
+        int*        ptr = reinterpret_cast<int*>( trans.get_data_ptr() );
 
-        fout<< hex << adr << " check, cmd=" << (cmd ? 'W' : 'R') << ", data=" << hex << *ptr << " at time " << sc_time_stamp() << endl;
+        fout << "Initiator: " << hex << adr << " check, cmd=" << (cmd ? 'W' : 'R') << ", data=" << hex << *ptr << " at time " << sc_time_stamp() << endl;
 
         // Allow the memory manager to free the transaction object
         trans.release();

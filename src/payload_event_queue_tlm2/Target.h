@@ -71,7 +71,7 @@ struct Target: sc_module {
         switch (phase) {
             case BEGIN_REQ:
                 #ifdef DEBUG
-                fout << hex << trans.get_address() << " BEGIN_REQ at " << sc_time_stamp() << endl;
+                fout << "Target   : " << hex << trans.get_address() << " BEGIN_REQ at " << sc_time_stamp() << endl;
                 #endif
 
                 // Increment the transaction reference count
@@ -94,7 +94,7 @@ struct Target: sc_module {
                 // and allow other pending transactions to proceed
 
                 #ifdef DEBUG
-                fout << hex << trans.get_address() << " END_RESP at " << sc_time_stamp() << endl;
+                fout << "Target   : " << hex << trans.get_address() << " END_RESP at " << sc_time_stamp() << endl;
                 #endif
 
                 if (!response_in_progress) {
@@ -135,10 +135,10 @@ struct Target: sc_module {
 
                     if ( cmd == TLM_READ_COMMAND ) {
                         *reinterpret_cast<int*>(ptr) = rand();
-                        fout << hex << adr << " Execute READ, data = " << *reinterpret_cast<int*>(ptr) << endl;
+                        fout << "Target   : " << hex << adr << " Execute READ, data = " << *reinterpret_cast<int*>(ptr) << endl;
                     }
                     else if ( cmd == TLM_WRITE_COMMAND ) {
-                        fout << hex << adr << " Execute WRITE, data = " << *reinterpret_cast<int*>(ptr) << endl;
+                        fout << "Target   : " << hex << adr << " Execute WRITE, data = " << *reinterpret_cast<int*>(ptr) << endl;
                     }
 
                     trans.set_response_status( TLM_OK_RESPONSE );
