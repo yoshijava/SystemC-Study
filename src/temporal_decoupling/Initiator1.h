@@ -27,6 +27,7 @@ SC_MODULE(Initiator1) {
     }
 
     void initiator1Process() {
+        dumpMemory();
         sc_time delay;
         tlm_generic_payload* transaction = new tlm_generic_payload();
 
@@ -81,12 +82,34 @@ SC_MODULE(Initiator1) {
                 mQuantumkeeper.sync();
             }
         }
+        wait(2, SC_US);
+        dumpMemory();
     }
 
     void invalidate_direct_mem_ptr(sc_dt::uint64 start_range, sc_dt::uint64 end_range) {
         cout << "INVALIDATE DMI (" << start_range << ".." << end_range
             << ") for Initiator1 at " << sc_time_stamp() << "\n";
         isDmiValid = false;
+    }
+
+    void dumpMemory() {
+        cout << "----------------------Dump memory----------------------" << endl;
+        unsigned char buffer[MEM_SIZE];
+        for (int i=0 ; i<4 ; i++) {
+            tlm_generic_payload debug;
+            debug.set_address(MEM_SIZE * i);
+            debug.set_command(TLM_READ_COMMAND);
+            debug.set_data_length(MEM_SIZE);
+            debug.set_data_ptr(buffer);
+
+            unsigned int readLength = socket->transport_dbg(debug);
+
+            for (int j=0 ; j<readLength ; j+=4) {
+                cout << "mem[" << hex << (MEM_SIZE*i + j) << "] = "
+                    << *(reinterpret_cast<unsigned int*>( &buffer[j] )) << endl;
+            }
+        }
+        cout << "--------------------------------------------------------" << endl;
     }
 };
 

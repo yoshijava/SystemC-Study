@@ -22,14 +22,13 @@ SC_MODULE(Bus) {
             sprintf(txt, "targetSocket_%d", i);
             targetSocket[i] = new simple_target_socket_tagged<Bus>(txt);
             targetSocket[i]->register_b_transport       (this, &Bus::b_transport, i);
-            //targetSocket[i]->register_nb_transport_fw   (this, &Bus::nb_transport_fw, i);
             targetSocket[i]->register_get_direct_mem_ptr(this, &Bus::get_direct_mem_ptr, i);
+            targetSocket[i]->register_transport_dbg     (this, &Bus::transport_dbg, i);
         }
         for (int i=0 ; i<targetNum ; i++) {
             char txt[20];
             sprintf(txt, "initSocket_%d", i);
             initiatorSocket[i] = new simple_initiator_socket_tagged<Bus>(txt);
-            //initiatorSocket[i]->register_nb_transport_bw          (this, &Bus::nb_transport_bw, i);
             initiatorSocket[i]->register_invalidate_direct_mem_ptr(this, &Bus::invalidate_direct_mem_ptr, i);
         }
     }
@@ -78,6 +77,14 @@ SC_MODULE(Bus) {
         }
     }
 
+    unsigned int transport_dbg(int id, tlm::tlm_generic_payload& trans) {
+        uint64 maskedAddress;
+        uint64 address = trans.get_address();
+        unsigned int targetID = decode_address(address, maskedAddress);
+        trans.set_address(maskedAddress);
+        return (*initiatorSocket[targetID])->transport_dbg(trans);
+    }
+
     inline uint64 compose_address(unsigned int target_nr, uint64 address) {
         return (target_nr << 6) | (address & 0x3F);
     }
@@ -87,6 +94,7 @@ SC_MODULE(Bus) {
         masked_address = address & 0x3F;
         return target_nr;
     }
+
 };
 
 #endif

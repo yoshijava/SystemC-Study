@@ -2,6 +2,7 @@
 // Top-level module instantiates 2 initiators, a bus, and 4 memories
 // *****************************************************************************************
 #include "systemc"
+#include "Global.h"
 #include "Initiator1.h"
 #include "Initiator2.h"
 #include "Bus.h"

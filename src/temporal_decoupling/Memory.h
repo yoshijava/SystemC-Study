@@ -10,8 +10,6 @@ using namespace sc_core;
 using namespace sc_dt;
 using namespace tlm;
 
-#define MEM_SIZE 64
-
 SC_MODULE(Memory) {
     tlm_utils::simple_target_socket<Memory> socket;
     int memory[MEM_SIZE];
@@ -20,6 +18,7 @@ SC_MODULE(Memory) {
     SC_CTOR(Memory) : socket("socket") {
         socket.register_b_transport(this, &Memory::b_transport);
         socket.register_get_direct_mem_ptr(this, &Memory::get_direct_mem_ptr);
+        socket.register_transport_dbg(this, &Memory::transport_dbg);
 
         for (int i=0 ; i<MEM_SIZE ; i++) {
             memory[i] = 0xAA000000 | i;
@@ -67,6 +66,25 @@ SC_MODULE(Memory) {
         dmiData.set_write_latency(sc_time(5, SC_NS));
         dmiData.allow_read_write();    // The same as set_granted_access(DMI_ACCESS_READ_WRITE)
     }
+
+    virtual unsigned int transport_dbg(tlm::tlm_generic_payload& trans) {
+        tlm_command cmd = trans.get_command();
+        unsigned int dataLength = trans.get_data_length();
+        uint64 address = trans.get_address() / 4;
+
+        unsigned actualLength = dataLength;
+        if (dataLength >= (MEM_SIZE - address) * 4) {
+            actualLength = (MEM_SIZE - address) * 4;
+        }
+
+        if (cmd == TLM_READ_COMMAND) {
+            memcpy(trans.get_data_ptr(), &memory[address], actualLength);
+        } else if (cmd == TLM_WRITE_COMMAND) {
+            memcpy(&memory[address], trans.get_data_ptr(), actualLength);
+        }
+        return actualLength;
+    }
+
     void memoryProcess() {
         // Simply invalidate dmi pointer periodically
         sc_time latency = sc_time(3000, SC_NS);
