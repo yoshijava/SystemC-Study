@@ -31,11 +31,11 @@ SC_MODULE(Initiator1) {
         sc_time delay;
         tlm_generic_payload* transaction = new tlm_generic_payload();
 
-        for (int i=0 ; i<256 ; i+=4) {
+        for (int i=0 ; i<MEM_SIZE*4 ; i+=4) {
             data = 0xFF000000 | i;
             delay = mQuantumkeeper.get_local_time();
 
-            if (isDmiValid) {
+            if (isDmiValid && i >= dmiData.get_start_address() && i <= dmiData.get_end_address()) {
                 unsigned char* dmiPtr = dmiData.get_dmi_ptr();
                 uint64 startAddress = dmiData.get_start_address();
 
