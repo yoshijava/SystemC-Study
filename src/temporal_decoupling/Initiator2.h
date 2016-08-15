@@ -34,7 +34,7 @@ SC_MODULE(Initiator2) {
 
         wait(1, SC_US);
 
-        for (int i=0 ; i<256 ; i+=4) {
+        for (int i=0 ; i<MEM_SIZE*4 ; i+=4) {
             delay = mQuantumkeeper.get_local_time();
             // Grab a new transactionaction from the memory manager
             transaction = mMM.allocate();
@@ -60,7 +60,7 @@ SC_MODULE(Initiator2) {
                 SC_REPORT_ERROR("TLM2", errorMsg);
             }
 
-            cout << "READ     addr = " << hex << i << ", data = " << data
+            cout << "READ      addr = " << hex << i << ", data = " << data
                 << " at " << sc_time_stamp() << " delay = " << delay << "\n";
 
             mQuantumkeeper.set(delay);

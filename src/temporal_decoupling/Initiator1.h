@@ -40,7 +40,7 @@ SC_MODULE(Initiator1) {
                 uint64 startAddress = dmiData.get_start_address();
 
                 memcpy(dmiPtr + i - startAddress, &data, 4);
-                //wait(dmiData.get_write_latency());    //No waiting?
+                //wait(dmiData.get_write_latency());    //No waiting. To simulate timing with global/local quantum
                 delay += dmiData.get_write_latency();
                 
                 cout << "DMI WRITE addr = " << hex << i << ", data = " << data
@@ -78,9 +78,10 @@ SC_MODULE(Initiator1) {
 
             mQuantumkeeper.set(delay);
             mQuantumkeeper.inc(sc_time(100, SC_NS));
-            if (mQuantumkeeper.need_sync()) {
-                mQuantumkeeper.sync();
+            if (mQuantumkeeper.need_sync()) {   // function need_sync() returns true if sc_time_stamp() + m_local_time >= m_next_sync_point
+                mQuantumkeeper.sync();  //function sync() waits for m_local_time
             }
+            
         }
         wait(2, SC_US);
         dumpMemory();
