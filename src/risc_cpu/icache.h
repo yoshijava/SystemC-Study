@@ -38,21 +38,21 @@ Description of Modification:
 #define MAX_CODE_LENGTH 500
 
 struct icache : sc_module {
-    sc_in<unsigned >  	datain; 	// modified instruction
-    sc_in<bool>  		cs;    		// chip select
-    sc_in<bool>  		we;    		// write enable for SMC
-    sc_in<unsigned >  	addr;  		// address
-    sc_in<bool>  		ld_valid;	// load valid
-    sc_in<signed>  		ld_data;    	// load data value
-    sc_out<unsigned >  	dataout;  	// ram data out
-    sc_out<bool>  		icache_valid; 	// output valid
-    sc_out<bool>  		stall_fetch; 	// stall fetch if busy
+    sc_in<unsigned >  	datain; 	        // modified instruction
+    sc_in<bool>  		cs;    		        // chip select
+    sc_in<bool>  		we;    		        // write enable for SMC
+    sc_in<unsigned >  	addr;  		        // address
+    sc_in<bool>  		ld_valid;	        // load valid
+    sc_in<signed>  		ld_data;    	    // load data value
+    sc_out<unsigned >  	dataout;  	        // ram data out
+    sc_out<bool>  		icache_valid; 	    // output valid
+    sc_out<bool>  		stall_fetch; 	    // stall fetch if busy
     sc_in_clk 		CLK;
 
     // Parameter
-    unsigned *icmemory;	 				// icache data memory
-    unsigned *ictagmemory; 				// icache tag memory
-    signed int pid;	 				// process ID
+    unsigned *icmemory;	 				    // icache data memory
+    unsigned *ictagmemory; 				    // icache tag memory
+    signed int pid;	 				        // process ID
 
     int wait_cycles; // Number of cycles it takes to access imemory
 

@@ -40,26 +40,26 @@ Description of Modification:
 
 void floating::entry(){
 
-    int			        opcode_tmp = 0;
-    signed int		        dout_tmp = 0;
-    unsigned int		        dest_tmp = 0;
+    int                 opcode_tmp = 0;
+    signed int          dout_tmp = 0;
+    unsigned int        dest_tmp = 0;
 
-    unsigned int                  fpua_sign_tmp;
-    unsigned int                  fpua_exponent_tmp;
-    unsigned int                  fpua_significand_tmp;
-    unsigned int                  fpub_sign_tmp;
-    unsigned int                  fpub_exponent_tmp;
-    unsigned int                  fpub_significand_tmp;
-    const char *                  opcode_encode="";
-    unsigned int                  fpua_tmp;
-    unsigned int                  fpub_tmp;
+    unsigned int        fpua_sign_tmp;
+    unsigned int        fpua_exponent_tmp;
+    unsigned int        fpua_significand_tmp;
+    unsigned int        fpub_sign_tmp;
+    unsigned int        fpub_exponent_tmp;
+    unsigned int        fpub_significand_tmp;
+    const char *        opcode_encode="";
+    unsigned int        fpua_tmp;
+    unsigned int        fpub_tmp;
 
 
-    int				exponent_diff_tmp = 0;
-    unsigned int			significant_result = 0;
-    unsigned int			overflow_sign_tmp = 0;
-    unsigned int			result_exp_tmp = 0;
-    unsigned int			result_sign_tmp = 0;
+    int                 exponent_diff_tmp = 0;
+    unsigned int        significant_result = 0;
+    unsigned int        overflow_sign_tmp = 0;
+    unsigned int        result_exp_tmp = 0;
+    unsigned int        result_sign_tmp = 0;
 
     //
     // main loop
@@ -121,37 +121,37 @@ void floating::entry(){
         // output MUX
         switch (opcode_tmp) {
             case 0:         // Stall
-            opcode_encode = "STALL";
-            dout_tmp = dout_tmp;
-            wait();
-            break;
+                opcode_encode = "STALL";
+                dout_tmp = dout_tmp;
+                wait();
+                break;
             case 3:         // add
-            opcode_encode = "FADD";
-            significant_result = int(fpua_significand_tmp) + int(fpub_significand_tmp);
-            wait();
-            break;
+                opcode_encode = "FADD";
+                significant_result = int(fpua_significand_tmp) + int(fpub_significand_tmp);
+                wait();
+                break;
             case 4:         // sub
-            opcode_encode = "FSUB";
-            significant_result = int(fpua_significand_tmp) - int(fpub_significand_tmp);
-            wait();
-            break;
+                opcode_encode = "FSUB";
+                significant_result = int(fpua_significand_tmp) - int(fpub_significand_tmp);
+                wait();
+                break;
             case 5:         // mul
-            opcode_encode = "FMUL";
-            significant_result = int(fpua_significand_tmp) * int(fpub_significand_tmp);
-            fpub_exponent_tmp *= 2;			// exponent is doubled in value
-            wait();
-            break;
+                opcode_encode = "FMUL";
+                significant_result = int(fpua_significand_tmp) * int(fpub_significand_tmp);
+                fpub_exponent_tmp *= 2;            // exponent is doubled in value
+                wait();
+                break;
             case 6:         // div
-            opcode_encode = "FDIV";
-            significant_result = int(fpua_significand_tmp) / int(fpub_significand_tmp);
-            wait();
-            break;
+                opcode_encode = "FDIV";
+                significant_result = int(fpua_significand_tmp) / int(fpub_significand_tmp);
+                wait();
+                break;
             default:
-            printf("\t\t\t\t\t\t\t-------------------------------\n");
-            printf("\t\t\t\t\t\t\tFPU: Bad Opcode %d.\n",opcode_tmp);
-            printf("\t\t\t\t\t\t\t-------------------------------\n");
-            wait();
-            break;
+                printf("\t\t\t\t\t\t\t-------------------------------\n");
+                printf("\t\t\t\t\t\t\tFPU: Bad Opcode %d.\n",opcode_tmp);
+                printf("\t\t\t\t\t\t\t-------------------------------\n");
+                wait();
+                break;
         }
 
         overflow_sign_tmp = (significant_result & 0xff800000) >> 23;

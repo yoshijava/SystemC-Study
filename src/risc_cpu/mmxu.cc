@@ -45,9 +45,9 @@ Description of Modification:
 
 void mmxu::entry(){
 
-    int			        opcode_tmp = 0;
-    unsigned int		        dout_tmp = 0;
-    unsigned int		        dest_tmp = 0;
+    int			            opcode_tmp = 0;
+    unsigned int		    dout_tmp = 0;
+    unsigned int		    dest_tmp = 0;
     const char * 			opcode_encode;
 
     unsigned int			mmxa_tmp = 0;
@@ -96,132 +96,136 @@ void mmxu::entry(){
             // output MUX
             switch (opcode_tmp) {
                 case 0:         // Stall
-                opcode_encode = "STALL";
-                dout_tmp = dout_tmp;
-                wait();
-                break;
+                    opcode_encode = "STALL";
+                    dout_tmp = dout_tmp;
+                    wait();
+                    break;
                 case 3:         // add
-                opcode_encode = "PADD";
-                mmxc3_tmp = mmxa3_tmp + mmxb3_tmp;
-                mmxc2_tmp = mmxa2_tmp + mmxb2_tmp;
-                mmxc1_tmp = mmxa1_tmp + mmxb1_tmp;
-                mmxc0_tmp = mmxa0_tmp + mmxb0_tmp;
-                mmxc3_tmp = (mmxc3_tmp << 24) & 0xff000000;
-                mmxc2_tmp = (mmxc2_tmp << 16) & 0x00ff0000;
-                mmxc1_tmp = (mmxc1_tmp << 8)  & 0x0000ff00;
-                dout_tmp  = mmxc0_tmp | mmxc1_tmp | mmxc2_tmp | mmxc3_tmp;
-                wait();
-                break;
+                    opcode_encode = "PADD";
+                    mmxc3_tmp = mmxa3_tmp + mmxb3_tmp;
+                    mmxc2_tmp = mmxa2_tmp + mmxb2_tmp;
+                    mmxc1_tmp = mmxa1_tmp + mmxb1_tmp;
+                    mmxc0_tmp = mmxa0_tmp + mmxb0_tmp;
+                    mmxc3_tmp = (mmxc3_tmp << 24) & 0xff000000;
+                    mmxc2_tmp = (mmxc2_tmp << 16) & 0x00ff0000;
+                    mmxc1_tmp = (mmxc1_tmp << 8)  & 0x0000ff00;
+                    dout_tmp  = mmxc0_tmp | mmxc1_tmp | mmxc2_tmp | mmxc3_tmp;
+                    wait();
+                    break;
                 case 4:         // add with saturation
-                opcode_encode = "PADDS";
-                mmxc3_tmp = mmxa3_tmp + mmxb3_tmp;
-                mmxc2_tmp = mmxa2_tmp + mmxb2_tmp;
-                mmxc1_tmp = mmxa1_tmp + mmxb1_tmp;
-                mmxc0_tmp = mmxa0_tmp + mmxb0_tmp;
-                if (mmxc3_tmp >= 256) mmxc3_tmp = 0xff;
-                if (mmxc2_tmp >= 256) mmxc2_tmp = 0xff;
-                if (mmxc1_tmp >= 256) mmxc1_tmp = 0xff;
-                if (mmxc0_tmp >= 256) mmxc0_tmp = 0xff;
-                mmxc3_tmp = (mmxc3_tmp << 24) & 0xff000000;
-                mmxc2_tmp = (mmxc2_tmp << 16) & 0x00ff0000;
-                mmxc1_tmp = (mmxc1_tmp << 8)  & 0x0000ff00;
-                dout_tmp  = mmxc0_tmp | mmxc1_tmp | mmxc2_tmp | mmxc3_tmp;
-                wait();
-                break;
+                    opcode_encode = "PADDS";
+                    mmxc3_tmp = mmxa3_tmp + mmxb3_tmp;
+                    mmxc2_tmp = mmxa2_tmp + mmxb2_tmp;
+                    mmxc1_tmp = mmxa1_tmp + mmxb1_tmp;
+                    mmxc0_tmp = mmxa0_tmp + mmxb0_tmp;
+                    if (mmxc3_tmp >= 256) mmxc3_tmp = 0xff;
+                    if (mmxc2_tmp >= 256) mmxc2_tmp = 0xff;
+                    if (mmxc1_tmp >= 256) mmxc1_tmp = 0xff;
+                    if (mmxc0_tmp >= 256) mmxc0_tmp = 0xff;
+                    mmxc3_tmp = (mmxc3_tmp << 24) & 0xff000000;
+                    mmxc2_tmp = (mmxc2_tmp << 16) & 0x00ff0000;
+                    mmxc1_tmp = (mmxc1_tmp << 8)  & 0x0000ff00;
+                    dout_tmp  = mmxc0_tmp | mmxc1_tmp | mmxc2_tmp | mmxc3_tmp;
+                    wait();
+                    break;
 
                 case 5:         // sub
-                opcode_encode = "PSUB";
-                mmxc3_tmp = mmxa3_tmp - mmxb3_tmp;
-                mmxc2_tmp = mmxa2_tmp - mmxb2_tmp;
-                mmxc1_tmp = mmxa1_tmp - mmxb1_tmp;
-                mmxc0_tmp = mmxa0_tmp - mmxb0_tmp;
-                mmxc3_tmp = (mmxc3_tmp << 24) & 0xff000000;
-                mmxc2_tmp = (mmxc2_tmp << 16) & 0x00ff0000;
-                mmxc1_tmp = (mmxc1_tmp << 8)  & 0x0000ff00;
-                dout_tmp  = mmxc0_tmp | mmxc1_tmp | mmxc2_tmp | mmxc3_tmp;
-                wait();
-                break;
+                    opcode_encode = "PSUB";
+                    mmxc3_tmp = mmxa3_tmp - mmxb3_tmp;
+                    mmxc2_tmp = mmxa2_tmp - mmxb2_tmp;
+                    mmxc1_tmp = mmxa1_tmp - mmxb1_tmp;
+                    mmxc0_tmp = mmxa0_tmp - mmxb0_tmp;
+                    mmxc3_tmp = (mmxc3_tmp << 24) & 0xff000000;
+                    mmxc2_tmp = (mmxc2_tmp << 16) & 0x00ff0000;
+                    mmxc1_tmp = (mmxc1_tmp << 8)  & 0x0000ff00;
+                    dout_tmp  = mmxc0_tmp | mmxc1_tmp | mmxc2_tmp | mmxc3_tmp;
+                    wait();
+                    break;
                 case 6:         // sub with saturation
-                opcode_encode = "PSUBS";
-                mmxc3_tmp = mmxa3_tmp - mmxb3_tmp;
-                mmxc2_tmp = mmxa2_tmp - mmxb2_tmp;
-                mmxc1_tmp = mmxa1_tmp - mmxb1_tmp;
-                mmxc0_tmp = mmxa0_tmp - mmxb0_tmp;
-                if (mmxb3_tmp > mmxa3_tmp) mmxc3_tmp = 0x00;
-                if (mmxb2_tmp > mmxa2_tmp) mmxc2_tmp = 0x00;
-                if (mmxb1_tmp > mmxa1_tmp) mmxc1_tmp = 0x00;
-                if (mmxb0_tmp > mmxa0_tmp) mmxc0_tmp = 0x00;
-                mmxc3_tmp = (mmxc3_tmp << 24) & 0xff000000;
-                mmxc2_tmp = (mmxc2_tmp << 16) & 0x00ff0000;
-                mmxc1_tmp = (mmxc1_tmp << 8)  & 0x0000ff00;
-                dout_tmp  = mmxc0_tmp | mmxc1_tmp | mmxc2_tmp | mmxc3_tmp;
-                wait();
-                break;
+                    opcode_encode = "PSUBS";
+                    mmxc3_tmp = mmxa3_tmp - mmxb3_tmp;
+                    mmxc2_tmp = mmxa2_tmp - mmxb2_tmp;
+                    mmxc1_tmp = mmxa1_tmp - mmxb1_tmp;
+                    mmxc0_tmp = mmxa0_tmp - mmxb0_tmp;
+                    if (mmxb3_tmp > mmxa3_tmp) mmxc3_tmp = 0x00;
+                    if (mmxb2_tmp > mmxa2_tmp) mmxc2_tmp = 0x00;
+                    if (mmxb1_tmp > mmxa1_tmp) mmxc1_tmp = 0x00;
+                    if (mmxb0_tmp > mmxa0_tmp) mmxc0_tmp = 0x00;
+                    mmxc3_tmp = (mmxc3_tmp << 24) & 0xff000000;
+                    mmxc2_tmp = (mmxc2_tmp << 16) & 0x00ff0000;
+                    mmxc1_tmp = (mmxc1_tmp << 8)  & 0x0000ff00;
+                    dout_tmp  = mmxc0_tmp | mmxc1_tmp | mmxc2_tmp | mmxc3_tmp;
+                    wait();
+                    break;
                 case 7:         // packed multiply add with saturation
-                // a3*b3+a2*b2 , a1*b1+a0*b0
-                opcode_encode = "PMADD";
-                mmxc3_tmp = mmxa3_tmp * mmxb3_tmp;
-                mmxc2_tmp = mmxa2_tmp * mmxb2_tmp;
-                mmxc1_tmp = mmxa1_tmp * mmxb1_tmp;
-                mmxc0_tmp = mmxa0_tmp * mmxb0_tmp;
-                if (mmxc3_tmp >= 256) mmxc3_tmp = 0xff;
-                if (mmxc2_tmp >= 256) mmxc2_tmp = 0xff;
-                if (mmxc1_tmp >= 256) mmxc1_tmp = 0xff;
-                if (mmxc0_tmp >= 256) mmxc0_tmp = 0xff;
-                mmxcU_tmp = mmxc3_tmp + mmxc2_tmp;
-                mmxcL_tmp = mmxc1_tmp + mmxc0_tmp;
-                if (mmxcU_tmp >= 256) mmxcU_tmp = 0xff;
-                if (mmxcL_tmp >= 256) mmxcL_tmp = 0xff;
-                mmxcU_tmp = (mmxcU_tmp << 16) ;
-                dout_tmp  = mmxcU_tmp | mmxcL_tmp;
-                wait();
-                break;
+                    // a3*b3+a2*b2 , a1*b1+a0*b0
+                    opcode_encode = "PMADD";
+                    mmxc3_tmp = mmxa3_tmp * mmxb3_tmp;
+                    mmxc2_tmp = mmxa2_tmp * mmxb2_tmp;
+                    mmxc1_tmp = mmxa1_tmp * mmxb1_tmp;
+                    mmxc0_tmp = mmxa0_tmp * mmxb0_tmp;
+                    if (mmxc3_tmp >= 256) mmxc3_tmp = 0xff;
+                    if (mmxc2_tmp >= 256) mmxc2_tmp = 0xff;
+                    if (mmxc1_tmp >= 256) mmxc1_tmp = 0xff;
+                    if (mmxc0_tmp >= 256) mmxc0_tmp = 0xff;
+                    mmxcU_tmp = mmxc3_tmp + mmxc2_tmp;
+                    mmxcL_tmp = mmxc1_tmp + mmxc0_tmp;
+                    if (mmxcU_tmp >= 256) mmxcU_tmp = 0xff;
+                    if (mmxcL_tmp >= 256) mmxcL_tmp = 0xff;
+                    mmxcU_tmp = (mmxcU_tmp << 16) ;
+                    dout_tmp  = mmxcU_tmp | mmxcL_tmp;
+                    wait();
+                    break;
 
                 case 8:         // packed b1 (16bit) b0(16bit) and a1(16 bit) a0(16 bit)
-                // to B1(8bit) B0(8bit) A1(8bit) A0(8bit)
-                opcode_encode = "PACK";
-                mmxc3_tmp = mmxb2_tmp << 24;
-                mmxc2_tmp = mmxb0_tmp << 16;
-                mmxc1_tmp = mmxa2_tmp << 8;
-                mmxc0_tmp = mmxa0_tmp ;
-                dout_tmp  = mmxc3_tmp | mmxc2_tmp | mmxc1_tmp | mmxc0_tmp;
-                wait();
-                break;
+                    // to B1(8bit) B0(8bit) A1(8bit) A0(8bit)
+                    opcode_encode = "PACK";
+                    mmxc3_tmp = mmxb2_tmp << 24;
+                    mmxc2_tmp = mmxb0_tmp << 16;
+                    mmxc1_tmp = mmxa2_tmp << 8;
+                    mmxc0_tmp = mmxa0_tmp ;
+                    dout_tmp  = mmxc3_tmp | mmxc2_tmp | mmxc1_tmp | mmxc0_tmp;
+                    wait();
+                    break;
 
                 case 9:         // mmx chroma keying
-                // A =green != green green !=green
-                // B =green    green green   green
-                //Res=0xff  00   ff    00
-                opcode_encode = "MMXCK";
-                if (mmxa3_tmp == mmxb3_tmp)
-                mmxc3_tmp = 0xff;
-                else
-                mmxc3_tmp = 0x00;
-                if (mmxa2_tmp == mmxb2_tmp)
-                mmxc2_tmp = 0xff;
-                else
-                mmxc2_tmp = 0x00;
-                if (mmxa1_tmp == mmxb1_tmp)
-                mmxc1_tmp = 0xff;
-                else
-                mmxc1_tmp = 0x00;
-                if (mmxa0_tmp == mmxb0_tmp)
-                mmxc0_tmp = 0xff;
-                else
-                mmxc0_tmp = 0x00;
-                mmxc3_tmp = mmxc3_tmp << 24;
-                mmxc2_tmp = mmxc2_tmp << 16;
-                mmxc1_tmp = mmxc1_tmp << 8;
-                mmxc0_tmp = mmxc0_tmp ;
-                dout_tmp  = mmxc3_tmp | mmxc2_tmp | mmxc1_tmp | mmxc0_tmp;
-                wait();
-                break;
+                    // A =green != green green !=green
+                    // B =green    green green   green
+                    //Res=0xff  00   ff    00
+                    opcode_encode = "MMXCK";
+                    if (mmxa3_tmp == mmxb3_tmp)
+                        mmxc3_tmp = 0xff;
+                    else
+                        mmxc3_tmp = 0x00;
+
+                    if (mmxa2_tmp == mmxb2_tmp)
+                        mmxc2_tmp = 0xff;
+                    else
+                        mmxc2_tmp = 0x00;
+
+                    if (mmxa1_tmp == mmxb1_tmp)
+                        mmxc1_tmp = 0xff;
+                    else
+                        mmxc1_tmp = 0x00;
+
+                    if (mmxa0_tmp == mmxb0_tmp)
+                        mmxc0_tmp = 0xff;
+                    else
+                        mmxc0_tmp = 0x00;
+
+                    mmxc3_tmp = mmxc3_tmp << 24;
+                    mmxc2_tmp = mmxc2_tmp << 16;
+                    mmxc1_tmp = mmxc1_tmp << 8;
+                    mmxc0_tmp = mmxc0_tmp ;
+                    dout_tmp  = mmxc3_tmp | mmxc2_tmp | mmxc1_tmp | mmxc0_tmp;
+                    wait();
+                    break;
 
                 default:
-                opcode_encode = "INVALID";
-                printf("MMX:      Bad Opcode %d.\n",opcode_tmp);
-                wait();
-                break;
+                    opcode_encode = "INVALID";
+                    printf("MMX:      Bad Opcode %d.\n",opcode_tmp);
+                    wait();
+                    break;
             }
 
 

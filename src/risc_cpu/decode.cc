@@ -34,7 +34,7 @@ Description of Modification:
 *****************************************************************************/
 
 
-#include <climits>	// for definition on value 's MAX
+#include <climits>    // for definition on value 's MAX
 #include "systemc.h"
 #include "decode.h"
 #include "directive.h"
@@ -42,8 +42,8 @@ Description of Modification:
 
 void decode::entry()
 {
-    unsigned int 	instr_tmp = 0;
-    unsigned int 	opcode_tmp = 0;
+    unsigned int  instr_tmp = 0;
+    unsigned int  opcode_tmp = 0;
     unsigned int  regA_tmp = 0;
     unsigned int  regB_tmp = 0;
     unsigned int  regC_tmp = 0;
@@ -51,11 +51,11 @@ void decode::entry()
     unsigned int  offset_tmp = 0;
     signed   int  label_tmp = 0;
     unsigned int  longlabel_tmp = 0;
-    signed int	srcA_tmp = 0;
-    signed int	srcB_tmp = 0;
-    signed int	srcC_tmp = 0;
-    int		i;
-    bool		branch_direction_tmp = 0;
+    signed int    srcA_tmp = 0;
+    signed int    srcB_tmp = 0;
+    signed int    srcC_tmp = 0;
+    int           i;
+    bool          branch_direction_tmp = 0;
 
 
     branch_valid.write(false);
@@ -100,16 +100,16 @@ void decode::entry()
                 branch_valid.write(false);
             }
             instr_tmp  = instruction.read();
-            opcode_tmp 	= (instr_tmp & 0xff000000) >> 24;
-            regC_tmp   	= (instr_tmp & 0x00f00000) >> 20;
-            regA_tmp   	= (instr_tmp & 0x000f0000) >> 16;
-            regB_tmp   	= (instr_tmp & 0x0000f000) >> 12;
-            imm_tmp    	= (instr_tmp & 0x0000ffff);
-            offset_tmp 	= (instr_tmp & 0x00000fff);
-            label_tmp  	= (instr_tmp & 0x0000ffff);
+            opcode_tmp     = (instr_tmp & 0xff000000) >> 24;
+            regC_tmp       = (instr_tmp & 0x00f00000) >> 20;
+            regA_tmp       = (instr_tmp & 0x000f0000) >> 16;
+            regB_tmp       = (instr_tmp & 0x0000f000) >> 12;
+            imm_tmp        = (instr_tmp & 0x0000ffff);
+            offset_tmp     = (instr_tmp & 0x00000fff);
+            label_tmp      = (instr_tmp & 0x0000ffff);
             longlabel_tmp   = (instr_tmp & 0x00ffffff);
             branch_direction_tmp = (instr_tmp & 0x00008000) >> 15;
-            if (branch_direction_tmp) {			// handle backward branch
+            if (branch_direction_tmp) {            // handle backward branch
                 label_tmp = - (0xffff - label_tmp + 1)  ;
             }
             //printf("opcode = %d regC = %d regA = %d regB = %d\n",opcode_tmp, regC_tmp, regA_tmp, regB_tmp);
@@ -132,7 +132,7 @@ void decode::entry()
             // }
 
             switch(opcode_tmp) {
-                case 0x0:	// halt
+                case 0x0:    // halt
                     printf("\n\n\t\t\t*******************************\n");
                     printf("\t\t\tID: REGISTERS DUMP");
                     cout << " at CSIM " << sc_time_stamp() << endl;
@@ -148,7 +148,7 @@ void decode::entry()
                     wait();
                     wait();
                     break;
-                case 0x01:	// add R1, R2, R3
+                case 0x01:    // add R1, R2, R3
                     printf("\t\t\tID: R%d= R%d(=%d)+R%d(=%d)",
                     regC_tmp, regA_tmp, srcA_tmp, regB_tmp, srcB_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -162,7 +162,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x02:	// addi R1, R2, #value
+                case 0x02:    // addi R1, R2, #value
                     printf("\t\t\tID: R%d= R%d(=%d)+%d",
                     regC_tmp, regA_tmp, srcA_tmp, imm_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -176,7 +176,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x03:	// addc R1, R2, R3 + Carrybit
+                case 0x03:    // addc R1, R2, R3 + Carrybit
                     printf("\t\t\tID: R%d=  R%d(=%d)+R%d(=%d)+C",
                     regC_tmp, regA_tmp, srcA_tmp, regB_tmp, srcB_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -190,7 +190,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x04:	// sub R1, R2, R3
+                case 0x04:    // sub R1, R2, R3
                     printf("\t\t\tID: R%d=R%d(=%d)-R%d(=%d)",
                     regC_tmp, regA_tmp, srcA_tmp, regB_tmp, srcB_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -204,7 +204,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x05:	// subi R1, R2,  #value
+                case 0x05:    // subi R1, R2,  #value
                     printf("\t\t\tID: R%d=R%d(=%d)-%d",
                     regC_tmp, regA_tmp, srcA_tmp, imm_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -218,7 +218,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x06:	// subc R1, R2, R3 - Carrybit
+                case 0x06:    // subc R1, R2, R3 - Carrybit
                     printf("\t\t\tID: R%d=R%d(=%d)-R%d(=%d)-C",
                     regC_tmp, regA_tmp, srcA_tmp, regB_tmp, srcB_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -232,7 +232,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x07:	// mul R1, R2, R3
+                case 0x07:    // mul R1, R2, R3
                     printf("\t\t\tID: R%d=R%d(=%d)*R%d(=%d)",
                     regC_tmp, regA_tmp, srcA_tmp, regB_tmp, srcB_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -246,7 +246,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x08:	// div R1, R2, R3
+                case 0x08:    // div R1, R2, R3
                     printf("\t\t\tID: R%d=R%d(=%d)/R%d(=%d)",
                     regC_tmp, regA_tmp, srcA_tmp, regB_tmp, srcB_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -260,7 +260,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x09:	// nand R1, R2, R3
+                case 0x09:    // nand R1, R2, R3
                     printf("\t\t\tID: R%d=R%d(=%x) nand R%d(=%x)",
                     regC_tmp, regA_tmp, srcA_tmp, regB_tmp, srcB_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -274,7 +274,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x0a:	// and R1, R2, R3
+                case 0x0a:    // and R1, R2, R3
                     printf("\t\t\tID: R%d=R%d(=%x) and R%d(=%x)",
                     regC_tmp, regA_tmp, srcA_tmp, regB_tmp, srcB_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -288,7 +288,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x0b:	// or R1, R2, R3
+                case 0x0b:    // or R1, R2, R3
                     printf("\t\t\tID: R%d=R%d(=%x) or R%d(=%x)",
                     regC_tmp, regA_tmp, srcA_tmp, regB_tmp, srcB_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -302,7 +302,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x0c:	// xor R1, R2, R3
+                case 0x0c:    // xor R1, R2, R3
                     printf("\t\t\tID: R%d=R%d(=%x) xor R%d(=%x)",
                     regC_tmp, regA_tmp, srcA_tmp, regB_tmp, srcB_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -344,7 +344,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x4d:	// lw R1, R2, offset
+                case 0x4d:    // lw R1, R2, offset
                     printf("\t\t\tID: R%d<=mem[R%d=(%d)+%d]",
                     regC_tmp, regA_tmp, srcA_tmp, offset_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -358,7 +358,7 @@ void decode::entry()
                     mem_access.write(false);
                     wait();
                     break;
-                case 0x4e:	// sw R1, R2, offset
+                case 0x4e:    // sw R1, R2, offset
                     printf("\t\t\tID: R%d=>mem[R%d(=%d) + %d]",
                     regC_tmp, regA_tmp, srcA_tmp, offset_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -372,7 +372,7 @@ void decode::entry()
                     mem_write.write(false);
                     wait();
                     break;
-                case 0x0f:	// mov R1, R2
+                case 0x0f:    // mov R1, R2
                     printf("\t\t\tID: R%d=R%d(=%d)",
                     regC_tmp, regA_tmp, srcA_tmp);
                     cout << " \n\t\t\t  : at CSIM " << sc_time_stamp() << endl;
@@ -386,7 +386,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x10:	// beq R1, R2, label
+                case 0x10:    // beq R1, R2, label
                     src_A.write(0);
                     src_B.write(0);
                     alu_src.write(0);
@@ -409,7 +409,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x11:	// bne R1, R2, label
+                case 0x11:    // bne R1, R2, label
                     src_A.write(0);
                     src_B.write(0);
                     alu_src.write(0);
@@ -432,7 +432,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x12:	// bgt R1, R2, label
+                case 0x12:    // bgt R1, R2, label
                     src_A.write(0);
                     src_B.write(0);
                     alu_src.write(0);
@@ -455,7 +455,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x13:	// bge R1, R2, label
+                case 0x13:    // bge R1, R2, label
                     src_A.write(0);
                     src_B.write(0);
                     alu_src.write(0);
@@ -478,7 +478,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x14:	// blt R1, R2, label
+                case 0x14:    // blt R1, R2, label
                     src_A.write(0);
                     src_B.write(0);
                     alu_src.write(0);
@@ -501,7 +501,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x15:	// ble R1, R2, label
+                case 0x15:    // ble R1, R2, label
                     src_A.write(0);
                     src_B.write(0);
                     alu_src.write(0);
@@ -524,7 +524,7 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x16:	// j label
+                case 0x16:    // j label
                     src_A.write(0);
                     src_B.write(0);
                     alu_src.write(0);
@@ -541,14 +541,14 @@ void decode::entry()
                     decode_valid.write(false);
                     wait();
                     break;
-                case 0x17:	// jal label for procedure call
+                case 0x17:    // jal label for procedure call
                     printf("\t\t\tID: j pc(%d) and sp <- pc", longlabel_tmp);
                     cout << " at CSIM " << sc_time_stamp() << endl;
                     cout << "\t\t\t-------------------------------" << endl;
                     wait();
                     wait();
                     break;
-                case 0x18:	// jr
+                case 0x18:    // jr
                     printf("\t\t\tID: jr and pc <- sp\n");
                     cout << " at CSIM " << sc_time_stamp() << endl;
                     cout << "\t\t\t-------------------------------" << endl;
@@ -740,7 +740,7 @@ void decode::entry()
                     pid_valid.write(false);
                     wait();
                     break;
-                case 0xf1:	// movi R1, #value
+                case 0xf1:    // movi R1, #value
                     printf("\t\t\tID: R%d=%d",
                     regC_tmp, imm_tmp);
                     cout << " at CSIM " << sc_time_stamp() << endl;

@@ -66,74 +66,74 @@ void exec::entry(){
             // output MUX
             switch (opcode_tmp) {
                 case 0:         // Stall
-                dout_tmp = dout_tmp;
-                wait();
-                break;
+                    dout_tmp = dout_tmp;
+                    wait();
+                    break;
                 case 1: 	// add with carry
-                dout_tmp = dina_tmp + dinb_tmp + add1_tmp;
-                wait();
-                break;
+                    dout_tmp = dina_tmp + dinb_tmp + add1_tmp;
+                    wait();
+                    break;
                 case 2: 	// sub with carry
-                dout_tmp = dina_tmp - dinb_tmp - add1_tmp;
-                wait();
-                break;
+                    dout_tmp = dina_tmp - dinb_tmp - add1_tmp;
+                    wait();
+                    break;
                 case 3:         // add without carry
-                dout_tmp = dina_tmp + dinb_tmp;
-                wait();
-                break;
+                    dout_tmp = dina_tmp + dinb_tmp;
+                    wait();
+                    break;
                 case 4:         // sub without carry
-                dout_tmp = dina_tmp - dinb_tmp;
-                wait();
-                break;
+                    dout_tmp = dina_tmp - dinb_tmp;
+                    wait();
+                    break;
                 case 5:         // multiply assume 2 clock cycle multiplication
-                dout_tmp = dina_tmp * dinb_tmp;
-                wait();	// so that BC has something to do
-                wait();
-                break;
+                    dout_tmp = dina_tmp * dinb_tmp;
+                    wait();	// so that BC has something to do
+                    wait();
+                    break;
                 case 6:         // divide assume 2 clock cycle multiplication
-                if (dinb_tmp == 0) {
-                    printf("Division Exception - Divide by zero \n");
-                } else {
-                    dout_tmp = dina_tmp / dinb_tmp;
-                }
-                wait();	 // so that BC has something to do
-                wait();
-                break;
+                    if (dinb_tmp == 0) {
+                        printf("Division Exception - Divide by zero \n");
+                    } else {
+                        dout_tmp = dina_tmp / dinb_tmp;
+                    }
+                    wait();	 // so that BC has something to do
+                    wait();
+                    break;
                 case 7:         // bitwise NAND
-                dout_tmp = ~(dina_tmp & dinb_tmp);
-                wait();
-                break;
+                    dout_tmp = ~(dina_tmp & dinb_tmp);
+                    wait();
+                    break;
                 case 8:         // bitwise AND
-                dout_tmp = dina_tmp & dinb_tmp;
-                wait();
-                break;
+                    dout_tmp = dina_tmp & dinb_tmp;
+                    wait();
+                    break;
                 case 9:         // bitwise OR
-                dout_tmp = dina_tmp | dinb_tmp;
-                wait();
-                break;
+                    dout_tmp = dina_tmp | dinb_tmp;
+                    wait();
+                    break;
                 case 10:         // bitwise XOR
-                dout_tmp = dina_tmp ^ dinb_tmp;
-                wait();
-                break;
+                    dout_tmp = dina_tmp ^ dinb_tmp;
+                    wait();
+                    break;
                 case 11:         // bitwise complement
-                dout_tmp = ~ dina_tmp;
-                wait();
-                break;
+                    dout_tmp = ~ dina_tmp;
+                    wait();
+                    break;
                 case 12:         // left shift
-                dout_tmp = dina_tmp << dinb_tmp;
-                wait();
-                break;
+                    dout_tmp = dina_tmp << dinb_tmp;
+                    wait();
+                    break;
                 case 13:         // right shift
-                dout_tmp = dina_tmp >> dinb_tmp;
-                wait();
-                break;
+                    dout_tmp = dina_tmp >> dinb_tmp;
+                    wait();
+                    break;
                 case 14: 	// modulo
-                dout_tmp = dina_tmp % dinb_tmp;
-                wait();
-                break;
+                    dout_tmp = dina_tmp % dinb_tmp;
+                    wait();
+                    break;
                 default:
-                printf("ALU:      Bad Opcode %d.\n",opcode_tmp);
-                break;
+                    printf("ALU:      Bad Opcode %d.\n",opcode_tmp);
+                    break;
             }
 
 
