@@ -5,7 +5,6 @@ LIB=-lsystemc
 main:
 	mkdir -p out
 	g++ -o out/risc_cpu *.cc -g $(LIB_DIR) $(INC_DIR) -static $(LIB) -lm -lpthread
-	cp *.img out/
 
 all: main
 
